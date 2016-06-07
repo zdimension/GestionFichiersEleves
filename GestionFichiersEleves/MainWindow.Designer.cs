@@ -1,21 +1,4 @@
-﻿/*
-This file is part of GestionFichiersEleves.
-
-GestionFichiersEleves is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-GestionFichiersEleves is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with GestionFichiersEleves.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -70,25 +53,26 @@ namespace GestionFichiersEleves
             this.pbxTotal = new System.Windows.Forms.ProgressBar();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.label6 = new System.Windows.Forms.Label();
-            this.bwMain = new System.ComponentModel.BackgroundWorker();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            this.label8 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
-            this.label10 = new System.Windows.Forms.Label();
             this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
             this.label11 = new System.Windows.Forms.Label();
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
             this.label12 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.label6 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.label8 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
+            this.label10 = new System.Windows.Forms.Label();
+            this.bwMain = new System.ComponentModel.BackgroundWorker();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.splitContainer4 = new System.Windows.Forms.SplitContainer();
             this.dgvEleves = new GestionFichiersEleves.DataGridViewEx();
             this.dgvLivres = new GestionFichiersEleves.DataGridViewEx();
-            this.dgvOptionsExclues = new GestionFichiersEleves.DataGridViewEx();
-            this.dgvDivisionsExclues = new GestionFichiersEleves.DataGridViewEx();
             this.dgvDivisions = new GestionFichiersEleves.DataGridViewEx();
+            this.dgvDivisionsExclues = new GestionFichiersEleves.DataGridViewEx();
+            this.dgvOptionsExclues = new GestionFichiersEleves.DataGridViewEx();
             this.fsFichierLivres = new GestionFichiersEleves.FileSelector();
             this.fsDivisions = new GestionFichiersEleves.FileSelector();
             this.fsDivisionsExclues = new GestionFichiersEleves.FileSelector();
@@ -104,18 +88,28 @@ namespace GestionFichiersEleves
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
+            this.tableLayoutPanel8.SuspendLayout();
+            this.tableLayoutPanel9.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
             this.tableLayoutPanel7.SuspendLayout();
-            this.tableLayoutPanel8.SuspendLayout();
-            this.tableLayoutPanel9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).BeginInit();
+            this.splitContainer3.Panel1.SuspendLayout();
+            this.splitContainer3.Panel2.SuspendLayout();
+            this.splitContainer3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).BeginInit();
+            this.splitContainer4.Panel1.SuspendLayout();
+            this.splitContainer4.Panel2.SuspendLayout();
+            this.splitContainer4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEleves)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLivres)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvOptionsExclues)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvDivisionsExclues)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDivisions)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDivisionsExclues)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvOptionsExclues)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlTop
@@ -350,133 +344,15 @@ namespace GestionFichiersEleves
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.tableLayoutPanel3);
+            this.splitContainer1.Panel1.Controls.Add(this.splitContainer2);
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel4);
+            this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
             this.splitContainer1.Size = new System.Drawing.Size(934, 345);
             this.splitContainer1.SplitterDistance = 172;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 1;
-            // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel8, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel9, 1, 0);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 1;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(930, 168);
-            this.tableLayoutPanel3.TabIndex = 0;
-            // 
-            // tableLayoutPanel4
-            // 
-            this.tableLayoutPanel4.ColumnCount = 3;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel5, 2, 0);
-            this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel6, 1, 0);
-            this.tableLayoutPanel4.Controls.Add(this.tableLayoutPanel7, 0, 0);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 1;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(930, 168);
-            this.tableLayoutPanel4.TabIndex = 0;
-            // 
-            // tableLayoutPanel5
-            // 
-            this.tableLayoutPanel5.ColumnCount = 1;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Controls.Add(this.dgvOptionsExclues, 0, 1);
-            this.tableLayoutPanel5.Controls.Add(this.label6, 0, 0);
-            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(623, 3);
-            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 2;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(304, 162);
-            this.tableLayoutPanel5.TabIndex = 4;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label6.Location = new System.Drawing.Point(3, 0);
-            this.label6.MinimumSize = new System.Drawing.Size(0, 20);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(298, 20);
-            this.label6.TabIndex = 4;
-            this.label6.Text = "Options exclues";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // bwMain
-            // 
-            this.bwMain.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwMain_DoWork);
-            // 
-            // tableLayoutPanel6
-            // 
-            this.tableLayoutPanel6.ColumnCount = 1;
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.Controls.Add(this.label8, 0, 0);
-            this.tableLayoutPanel6.Controls.Add(this.dgvDivisionsExclues, 0, 1);
-            this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(313, 3);
-            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
-            this.tableLayoutPanel6.RowCount = 2;
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(304, 162);
-            this.tableLayoutPanel6.TabIndex = 5;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label8.Location = new System.Drawing.Point(3, 0);
-            this.label8.MinimumSize = new System.Drawing.Size(0, 20);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(298, 20);
-            this.label8.TabIndex = 5;
-            this.label8.Text = "Divisions exclues";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // tableLayoutPanel7
-            // 
-            this.tableLayoutPanel7.ColumnCount = 1;
-            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel7.Controls.Add(this.label10, 0, 0);
-            this.tableLayoutPanel7.Controls.Add(this.dgvDivisions, 0, 1);
-            this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel7.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel7.Name = "tableLayoutPanel7";
-            this.tableLayoutPanel7.RowCount = 2;
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(304, 162);
-            this.tableLayoutPanel7.TabIndex = 6;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label10.Location = new System.Drawing.Point(3, 0);
-            this.label10.MinimumSize = new System.Drawing.Size(0, 20);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(298, 20);
-            this.label10.TabIndex = 6;
-            this.label10.Text = "Divisions";
-            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tableLayoutPanel8
             // 
@@ -485,19 +361,20 @@ namespace GestionFichiersEleves
             this.tableLayoutPanel8.Controls.Add(this.dgvEleves, 0, 1);
             this.tableLayoutPanel8.Controls.Add(this.label11, 0, 0);
             this.tableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel8.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel8.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel8.Name = "tableLayoutPanel8";
+            this.tableLayoutPanel8.Padding = new System.Windows.Forms.Padding(3, 3, 0, 0);
             this.tableLayoutPanel8.RowCount = 2;
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(459, 162);
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(462, 168);
             this.tableLayoutPanel8.TabIndex = 2;
             // 
             // label11
             // 
             this.label11.AutoSize = true;
             this.label11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label11.Location = new System.Drawing.Point(3, 0);
+            this.label11.Location = new System.Drawing.Point(6, 3);
             this.label11.MinimumSize = new System.Drawing.Size(0, 20);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(453, 20);
@@ -512,19 +389,20 @@ namespace GestionFichiersEleves
             this.tableLayoutPanel9.Controls.Add(this.dgvLivres, 0, 1);
             this.tableLayoutPanel9.Controls.Add(this.label12, 0, 0);
             this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel9.Location = new System.Drawing.Point(468, 3);
+            this.tableLayoutPanel9.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel9.Name = "tableLayoutPanel9";
+            this.tableLayoutPanel9.Padding = new System.Windows.Forms.Padding(0, 3, 3, 0);
             this.tableLayoutPanel9.RowCount = 2;
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(459, 162);
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(462, 168);
             this.tableLayoutPanel9.TabIndex = 3;
             // 
             // label12
             // 
             this.label12.AutoSize = true;
             this.label12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label12.Location = new System.Drawing.Point(3, 0);
+            this.label12.Location = new System.Drawing.Point(3, 3);
             this.label12.MinimumSize = new System.Drawing.Size(0, 20);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(453, 20);
@@ -532,16 +410,160 @@ namespace GestionFichiersEleves
             this.label12.Text = "Livres";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // tableLayoutPanel5
+            // 
+            this.tableLayoutPanel5.ColumnCount = 1;
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel5.Controls.Add(this.dgvOptionsExclues, 0, 1);
+            this.tableLayoutPanel5.Controls.Add(this.label6, 0, 0);
+            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            this.tableLayoutPanel5.Padding = new System.Windows.Forms.Padding(0, 0, 3, 3);
+            this.tableLayoutPanel5.RowCount = 2;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(306, 168);
+            this.tableLayoutPanel5.TabIndex = 4;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label6.Location = new System.Drawing.Point(3, 0);
+            this.label6.MinimumSize = new System.Drawing.Size(0, 20);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(297, 20);
+            this.label6.TabIndex = 4;
+            this.label6.Text = "Options exclues";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tableLayoutPanel6
+            // 
+            this.tableLayoutPanel6.ColumnCount = 1;
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel6.Controls.Add(this.label8, 0, 0);
+            this.tableLayoutPanel6.Controls.Add(this.dgvDivisionsExclues, 0, 1);
+            this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
+            this.tableLayoutPanel6.Padding = new System.Windows.Forms.Padding(0, 0, 0, 3);
+            this.tableLayoutPanel6.RowCount = 2;
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(305, 168);
+            this.tableLayoutPanel6.TabIndex = 5;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label8.Location = new System.Drawing.Point(3, 0);
+            this.label8.MinimumSize = new System.Drawing.Size(0, 20);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(299, 20);
+            this.label8.TabIndex = 5;
+            this.label8.Text = "Divisions exclues";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tableLayoutPanel7
+            // 
+            this.tableLayoutPanel7.ColumnCount = 1;
+            this.tableLayoutPanel7.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel7.Controls.Add(this.label10, 0, 0);
+            this.tableLayoutPanel7.Controls.Add(this.dgvDivisions, 0, 1);
+            this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel7.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel7.Name = "tableLayoutPanel7";
+            this.tableLayoutPanel7.Padding = new System.Windows.Forms.Padding(3, 0, 0, 3);
+            this.tableLayoutPanel7.RowCount = 2;
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(307, 168);
+            this.tableLayoutPanel7.TabIndex = 6;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label10.Location = new System.Drawing.Point(6, 0);
+            this.label10.MinimumSize = new System.Drawing.Size(0, 20);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(298, 20);
+            this.label10.TabIndex = 6;
+            this.label10.Text = "Divisions";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // bwMain
+            // 
+            this.bwMain.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bwMain_DoWork);
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Margin = new System.Windows.Forms.Padding(0);
+            this.splitContainer2.Name = "splitContainer2";
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.tableLayoutPanel8);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.tableLayoutPanel9);
+            this.splitContainer2.Size = new System.Drawing.Size(930, 168);
+            this.splitContainer2.SplitterDistance = 462;
+            this.splitContainer2.SplitterWidth = 6;
+            this.splitContainer2.TabIndex = 0;
+            // 
+            // splitContainer3
+            // 
+            this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer3.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer3.Name = "splitContainer3";
+            // 
+            // splitContainer3.Panel1
+            // 
+            this.splitContainer3.Panel1.Controls.Add(this.tableLayoutPanel7);
+            // 
+            // splitContainer3.Panel2
+            // 
+            this.splitContainer3.Panel2.Controls.Add(this.splitContainer4);
+            this.splitContainer3.Size = new System.Drawing.Size(930, 168);
+            this.splitContainer3.SplitterDistance = 307;
+            this.splitContainer3.SplitterWidth = 6;
+            this.splitContainer3.TabIndex = 0;
+            // 
+            // splitContainer4
+            // 
+            this.splitContainer4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer4.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer4.Margin = new System.Windows.Forms.Padding(0);
+            this.splitContainer4.Name = "splitContainer4";
+            // 
+            // splitContainer4.Panel1
+            // 
+            this.splitContainer4.Panel1.Controls.Add(this.tableLayoutPanel6);
+            // 
+            // splitContainer4.Panel2
+            // 
+            this.splitContainer4.Panel2.Controls.Add(this.tableLayoutPanel5);
+            this.splitContainer4.Size = new System.Drawing.Size(617, 168);
+            this.splitContainer4.SplitterDistance = 305;
+            this.splitContainer4.SplitterWidth = 6;
+            this.splitContainer4.TabIndex = 0;
+            // 
             // dgvEleves
             // 
             this.dgvEleves.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dgvEleves.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
             this.dgvEleves.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvEleves.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvEleves.Location = new System.Drawing.Point(0, 20);
+            this.dgvEleves.Location = new System.Drawing.Point(3, 23);
             this.dgvEleves.Margin = new System.Windows.Forms.Padding(0);
             this.dgvEleves.Name = "dgvEleves";
-            this.dgvEleves.Size = new System.Drawing.Size(459, 142);
+            this.dgvEleves.Size = new System.Drawing.Size(459, 145);
             this.dgvEleves.TabIndex = 0;
             this.dgvEleves.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvEleves_CellClick);
             this.dgvEleves.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvEleves_CellValueChanged);
@@ -551,24 +573,24 @@ namespace GestionFichiersEleves
             this.dgvLivres.BackgroundColor = System.Drawing.SystemColors.Window;
             this.dgvLivres.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvLivres.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvLivres.Location = new System.Drawing.Point(0, 20);
+            this.dgvLivres.Location = new System.Drawing.Point(0, 23);
             this.dgvLivres.Margin = new System.Windows.Forms.Padding(0);
             this.dgvLivres.Name = "dgvLivres";
-            this.dgvLivres.Size = new System.Drawing.Size(459, 142);
+            this.dgvLivres.Size = new System.Drawing.Size(459, 145);
             this.dgvLivres.TabIndex = 1;
             this.dgvLivres.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvLivres_CellValueChanged);
             // 
-            // dgvOptionsExclues
+            // dgvDivisions
             // 
-            this.dgvOptionsExclues.BackgroundColor = System.Drawing.SystemColors.Window;
-            this.dgvOptionsExclues.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvOptionsExclues.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvOptionsExclues.Location = new System.Drawing.Point(0, 20);
-            this.dgvOptionsExclues.Margin = new System.Windows.Forms.Padding(0);
-            this.dgvOptionsExclues.Name = "dgvOptionsExclues";
-            this.dgvOptionsExclues.Size = new System.Drawing.Size(304, 142);
-            this.dgvOptionsExclues.TabIndex = 3;
-            this.dgvOptionsExclues.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvOptionsExclues_CellValueChanged);
+            this.dgvDivisions.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.dgvDivisions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvDivisions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvDivisions.Location = new System.Drawing.Point(3, 20);
+            this.dgvDivisions.Margin = new System.Windows.Forms.Padding(0);
+            this.dgvDivisions.Name = "dgvDivisions";
+            this.dgvDivisions.Size = new System.Drawing.Size(304, 145);
+            this.dgvDivisions.TabIndex = 1;
+            this.dgvDivisions.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDivisions_CellValueChanged);
             // 
             // dgvDivisionsExclues
             // 
@@ -578,21 +600,21 @@ namespace GestionFichiersEleves
             this.dgvDivisionsExclues.Location = new System.Drawing.Point(0, 20);
             this.dgvDivisionsExclues.Margin = new System.Windows.Forms.Padding(0);
             this.dgvDivisionsExclues.Name = "dgvDivisionsExclues";
-            this.dgvDivisionsExclues.Size = new System.Drawing.Size(304, 142);
+            this.dgvDivisionsExclues.Size = new System.Drawing.Size(305, 145);
             this.dgvDivisionsExclues.TabIndex = 2;
             this.dgvDivisionsExclues.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDivisionsExclues_CellValueChanged);
             // 
-            // dgvDivisions
+            // dgvOptionsExclues
             // 
-            this.dgvDivisions.BackgroundColor = System.Drawing.SystemColors.Window;
-            this.dgvDivisions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDivisions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvDivisions.Location = new System.Drawing.Point(0, 20);
-            this.dgvDivisions.Margin = new System.Windows.Forms.Padding(0);
-            this.dgvDivisions.Name = "dgvDivisions";
-            this.dgvDivisions.Size = new System.Drawing.Size(304, 142);
-            this.dgvDivisions.TabIndex = 1;
-            this.dgvDivisions.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDivisions_CellValueChanged);
+            this.dgvOptionsExclues.BackgroundColor = System.Drawing.SystemColors.Window;
+            this.dgvOptionsExclues.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvOptionsExclues.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvOptionsExclues.Location = new System.Drawing.Point(0, 20);
+            this.dgvOptionsExclues.Margin = new System.Windows.Forms.Padding(0);
+            this.dgvOptionsExclues.Name = "dgvOptionsExclues";
+            this.dgvOptionsExclues.Size = new System.Drawing.Size(303, 145);
+            this.dgvOptionsExclues.TabIndex = 3;
+            this.dgvOptionsExclues.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvOptionsExclues_CellValueChanged);
             // 
             // fsFichierLivres
             // 
@@ -690,23 +712,33 @@ namespace GestionFichiersEleves
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel8.ResumeLayout(false);
+            this.tableLayoutPanel8.PerformLayout();
+            this.tableLayoutPanel9.ResumeLayout(false);
+            this.tableLayoutPanel9.PerformLayout();
             this.tableLayoutPanel5.ResumeLayout(false);
             this.tableLayoutPanel5.PerformLayout();
             this.tableLayoutPanel6.ResumeLayout(false);
             this.tableLayoutPanel6.PerformLayout();
             this.tableLayoutPanel7.ResumeLayout(false);
             this.tableLayoutPanel7.PerformLayout();
-            this.tableLayoutPanel8.ResumeLayout(false);
-            this.tableLayoutPanel8.PerformLayout();
-            this.tableLayoutPanel9.ResumeLayout(false);
-            this.tableLayoutPanel9.PerformLayout();
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
+            this.splitContainer3.Panel1.ResumeLayout(false);
+            this.splitContainer3.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer3)).EndInit();
+            this.splitContainer3.ResumeLayout(false);
+            this.splitContainer4.Panel1.ResumeLayout(false);
+            this.splitContainer4.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer4)).EndInit();
+            this.splitContainer4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvEleves)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLivres)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvOptionsExclues)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvDivisionsExclues)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDivisions)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDivisionsExclues)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvOptionsExclues)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -731,11 +763,9 @@ namespace GestionFichiersEleves
         private Panel panel1;
         private Button btnStart;
         private ProgressBar pbxTotal;
-        private TableLayoutPanel tableLayoutPanel3;
         private DataGridViewEx dgvEleves;
         private DataGridViewEx dgvLivres;
         private SplitContainer splitContainer1;
-        private TableLayoutPanel tableLayoutPanel4;
         private DataGridViewEx dgvOptionsExclues;
         private DataGridViewEx dgvDivisionsExclues;
         private DataGridViewEx dgvDivisions;
@@ -756,6 +786,9 @@ namespace GestionFichiersEleves
         private Label label8;
         private TableLayoutPanel tableLayoutPanel7;
         private Label label10;
+        private SplitContainer splitContainer2;
+        private SplitContainer splitContainer3;
+        private SplitContainer splitContainer4;
     }
 }
 

@@ -1,21 +1,4 @@
-﻿/*
-This file is part of GestionFichiersEleves.
-
-GestionFichiersEleves is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-GestionFichiersEleves is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with GestionFichiersEleves.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Deployment.Application;
 using System.Diagnostics;
@@ -36,10 +19,27 @@ namespace GestionFichiersEleves
             InitializeComponent();
         }
 
+        public List<int> Indices = new List<int>();
+        
+        public void ChargerParams()
+        {
+            var fp = Path.Combine(Application.StartupPath, "parametres.txt");
+            if(!File.Exists(fp))
+            {
+                var c =
+                    "NOM=0\nPRENOM=1\nDIV SIECLE=7\nDIV=8\nOPTION 1=9\nNOM L1=20\nPRENOM L1=21\nADRESSE L1=22\nCP=24";
+                c = c.Replace("\n", Environment.NewLine);
+                File.WriteAllText(fp, c);
+            }
+
+            Indices = File.ReadAllLines(fp).Select(x => int.Parse(x.Split('=')[1])).ToList();
+        } 
+
         private void MainWindow_Load(object sender, EventArgs e)
         {
             Text = "GestionFichiersEleves " + Assembly.GetExecutingAssembly().GetName().Version.ToString(2);
             Helper.SetFont(this, Helper.GetSystemDefaultFont());
+            ChargerParams();
             ChargerFichiersParDefaut();
         }
 
@@ -83,6 +83,13 @@ namespace GestionFichiersEleves
             dgvEleves.Clear();
 
             CSVFichierEleves = FichierCSV.LireFichierCsv(f);
+            if(CSVFichierEleves.Colonnes.Count != 30)
+            {
+                MessageBox.Show(
+                    "Le fichier élèves contient " + CSVFichierEleves.Colonnes.Count +
+                    " colonnes, alors qu'il devrait normalement en contenir 30. Cela pourrait provoquer des erreurs.",
+                    "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             CSVFichierEleves.RemplirDGV(dgvEleves);
         }
 
@@ -251,11 +258,11 @@ namespace GestionFichiersEleves
 
                 var etape1 =
                     CSVFichierEleves.Lignes.GroupBy(
-                        x => new {NomL1 = x[20], PrenomL1 = x[21], AdresseL1 = x[22], CP = x[24]});
+                        x => new {NomL1 = x[Indices[5]], PrenomL1 = x[Indices[6]], AdresseL1 = x[Indices[7]], CP = x[Indices[8]]});
                 var etape2 = etape1.Where(x => x.Count() > 1);
                 ChangeProgressBarCurrent(5, 6);
                 csvFratries.Lignes = etape2.SelectMany(x => x.ToList().AddEmptyLine(x.Max(y => y.Count))).ToList();
-
+                creerDossiers();
                 ChangeStatus("Enregistrement du fichier des fratries...");
                 csvFratries.Enregistrer(Path.Combine(st, "Fratries.csv"));
                 ChangeProgressBarCurrent(6, 6);
@@ -265,7 +272,7 @@ namespace GestionFichiersEleves
                 ChangeProgressBarCurrent(0, CSVFichierEleves.Lignes.Count);
                 ChangeStatus("Génération des fichiers CSV...");
                 var csvClasses = new Dictionary<string, FichierCSV>();
-                foreach (var d in CSVFichierEleves.Lignes.Select(x => x[8]).Distinct())
+                foreach (var d in CSVFichierEleves.Lignes.Select(x => x[Indices[3]]).Distinct())
                 {
                     var csv = new FichierCSV {Colonnes = CSVFichierEleves.Colonnes.ToList()};
                     csv.Colonnes.AddRange(new[] {"Adherent", "Famille", "Delegues", "Caution", "loc_adhe", "Loc_NON"});
@@ -281,9 +288,9 @@ namespace GestionFichiersEleves
                     var curl = CSVFichierEleves.Lignes[i].ToList();
                     try
                     {
-                        var div = curl[8];
+                        var div = curl[Indices[3]];
 
-                        if (string.IsNullOrWhiteSpace(div) || string.IsNullOrWhiteSpace(curl[7]))
+                        if (string.IsNullOrWhiteSpace(div) || string.IsNullOrWhiteSpace(curl[Indices[2]]))
                         {
                             csvAnomalie.Lignes.Add(curl);
                             continue;
@@ -307,7 +314,7 @@ namespace GestionFichiersEleves
 
                         var lignesLivres = CSVFichierLivres.Lignes.Where(x => x[0] == ligneDansFichDiv[0]);
 
-                        foreach (var cli in curl.Skip(9).Take(9))
+                        foreach (var cli in curl.Skip(Indices[4]).Take(9))
                         {
                             if (lignesLivres.All(x => x[1] != cli) && !string.IsNullOrWhiteSpace(cli) && cli != "NC")
                             {
@@ -324,7 +331,7 @@ namespace GestionFichiersEleves
                         curl.AddRange(
                             lignesLivres.Where(
                                 x =>
-                                    (x[1] == "STD" || curl.Skip(9).Take(9).Contains(x[1])) &&
+                                    (x[1] == "STD" || curl.Skip(Indices[4]).Take(9).Contains(x[1])) &&
                                     !CSVOptionsExclues.Lignes.Any(
                                         y => (y[0] == "ALL" || y[0] == ligneDansFichDiv[0]) && y[1] == x[1]))
                                 .Select(x => x.Skip(2).Where(y => !string.IsNullOrWhiteSpace(y)))
@@ -378,7 +385,7 @@ namespace GestionFichiersEleves
                 {
                     var it = csvClassesL[i];
                     if (it.Value.Lignes.Count == 0) continue;
-                    it.Value.Enregistrer(Path.Combine(sd, it.Value.Lignes[0][7] + ".csv"));
+                    it.Value.Enregistrer(Path.Combine(sd, it.Value.Lignes[0][Indices[2]] + ".csv"));
 
                     ChangeProgressBarCurrent(i + 1, csvClassesL.Count);
                 }
@@ -449,7 +456,8 @@ namespace GestionFichiersEleves
                 "GestionFichiersEleves est un logiciel développé par Tom Niget (moi), élève en classe de 2°6 du lycée " +
                 "Guillaume Fichet de Bonneville, pour l'Association des Parents d'Élèves de Bonneville (APEB), dans le " +
                 "cadre du cours ICN (Informatique et Création Numérique).\n\nEn cas de problème n'hésitez pas à me " +
-                "contacter à l'adresse e-mail suivante :\nzippedfire@free.fr",
+                "contacter à l'adresse e-mail suivante :\nzippedfire@free.fr\n\n" +
+                "Date de compilation : " + Assembly.GetExecutingAssembly().GetLinkerTime().ToString("dd/MM/yyyy HH:mm:ss"),
                 "À propos du logiciel", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
