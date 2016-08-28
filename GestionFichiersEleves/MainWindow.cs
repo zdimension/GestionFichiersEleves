@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -19,21 +20,91 @@ namespace GestionFichiersEleves
             InitializeComponent();
         }
 
-        public List<int> Indices = new List<int>();
-        
+        public Dictionary<string, int> Indices = new Dictionary<string, int>
+        {
+            {"NOM", 0},
+            {"PRENOM", 1},
+            {"DIV SIECLE", 7},
+            {"DIV", 8},
+            {"OPTION 1", 9},
+            {"NOM L1", 20},
+            {"PRENOM L1", 21},
+            {"ADRESSE L1", 22},
+            {"CP", 24},
+            {"NB COL", 29},
+
+            {"NB OPTIONS", 7}
+        };
+
+        public Dictionary<int, string> Comments = new Dictionary<int, string>(); 
+
+        public static readonly string PARAM_PATH = Path.Combine(Application.StartupPath, "parametres.txt");
+
+        public Encoding EncodageParam = Encoding.UTF8;
+
         public void ChargerParams()
         {
-            var fp = Path.Combine(Application.StartupPath, "parametres.txt");
-            if(!File.Exists(fp))
+            if (!File.Exists(PARAM_PATH))
             {
-                var c =
-                    "NOM=0\nPRENOM=1\nDIV SIECLE=7\nDIV=8\nOPTION 1=9\nNOM L1=20\nPRENOM L1=21\nADRESSE L1=22\nCP=24";
-                c = c.Replace("\n", Environment.NewLine);
-                File.WriteAllText(fp, c);
+                EnregistrerParams();
+                MessageBox.Show("Le fichier de paramètres n'a pas été trouvé.\n" +
+                                "Il a donc été créé avec les valeurs par défaut.", "Information", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
             }
 
-            Indices = File.ReadAllLines(fp).Select(x => int.Parse(x.Split('=')[1])).ToList();
-        } 
+            EncodageParam = Helper.GetEncoding(PARAM_PATH);
+            var lns = File.ReadAllLines(PARAM_PATH, EncodageParam);
+            var j = 0;
+            for (var i = 0; i < lns.Length; i++)
+            {
+                var l = lns[i];
+                if (l.Contains('='))
+                {
+                    var erreur = "";
+                    var s = l.Split('=');
+                    if (s.Length == 2)
+                    {
+                        var pn = s[0].ToUpper().Trim();
+                        if (Indices.ContainsKey(pn))
+                        {
+                            var pv = s[1].Trim();
+                            var val = -1;
+                            if (int.TryParse(pv, out val))
+                            {
+                                Indices[pn] = val;
+                                j++;
+                                continue;
+                            }
+                            else erreur = "Nombre invalide : " + pv;
+                        }
+                        else erreur = "Paramètre inconnu : " + pn;
+                    }
+                    else erreur = "Valeur attendue";
+                    MessageBox.Show("Erreur à la ligne " + (i + 1) + " : " + erreur, "Erreur", MessageBoxButtons.OK,
+                        MessageBoxIcon.Exclamation);
+                }
+                else
+                {
+                    // Commentaire
+                    Comments.Add(i, l);
+                }
+            }
+            if (j != Indices.Count)
+            {
+                MessageBox.Show("Certains paramètres étaient manquants ou invalides.\n" +
+                                "Leurs valeurs par défaut ont donc été rétablies.", "Erreur", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            EnregistrerParams();
+        }
+
+        public void EnregistrerParams()
+        {
+            var ps = Indices.Select(x => x.Key + "=" + x.Value).ToList();
+            foreach(var d in Comments) ps.Insert(d.Key, d.Value);
+            File.WriteAllLines(PARAM_PATH, ps, EncodageParam);
+        }
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
@@ -83,11 +154,11 @@ namespace GestionFichiersEleves
             dgvEleves.Clear();
 
             CSVFichierEleves = FichierCSV.LireFichierCsv(f);
-            if(CSVFichierEleves.Colonnes.Count != 30)
+            if(CSVFichierEleves.Colonnes.Count != Indices["NB COL"])
             {
                 MessageBox.Show(
                     "Le fichier élèves contient " + CSVFichierEleves.Colonnes.Count +
-                    " colonnes, alors qu'il devrait normalement en contenir 30. Cela pourrait provoquer des erreurs.",
+                    " colonnes, alors qu'il devrait normalement en contenir " + Indices["NB COL"] + ". Cela pourrait provoquer des erreurs.",
                     "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             CSVFichierEleves.RemplirDGV(dgvEleves);
@@ -185,6 +256,18 @@ namespace GestionFichiersEleves
 
         private void btnStart_Click(object sender, EventArgs e)
         {
+            var required = new List<string>();
+            if(CSVDivisions == null) required.Add("Divisions");
+            if(CSVFichierEleves == null) required.Add("Élèves");
+            if(CSVFichierLivres == null) required.Add("Livres");
+            if (required.Count > 0)
+            {
+                MessageBox.Show(
+                    "Les fichiers suivants sont requis :\n" + string.Join("\n", required.Select(x => "• " + x)),
+                    "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             pbxCurrent.Visible = pbxTotal.Visible = label2.Visible = label4.Visible = true;
             bwMain.RunWorkerAsync();
         }
@@ -258,7 +341,7 @@ namespace GestionFichiersEleves
 
                 var etape1 =
                     CSVFichierEleves.Lignes.GroupBy(
-                        x => new {NomL1 = x[Indices[5]], PrenomL1 = x[Indices[6]], AdresseL1 = x[Indices[7]], CP = x[Indices[8]]});
+                        x => new {NomL1 = x[Indices["NOM L1"]], PrenomL1 = x[Indices["PRENOM L1"]], AdresseL1 = x[Indices["ADRESSE L1"]], CP = x[Indices["CP"]]});
                 var etape2 = etape1.Where(x => x.Count() > 1);
                 ChangeProgressBarCurrent(5, 6);
                 csvFratries.Lignes = etape2.SelectMany(x => x.ToList().AddEmptyLine(x.Max(y => y.Count))).ToList();
@@ -272,7 +355,7 @@ namespace GestionFichiersEleves
                 ChangeProgressBarCurrent(0, CSVFichierEleves.Lignes.Count);
                 ChangeStatus("Génération des fichiers CSV...");
                 var csvClasses = new Dictionary<string, FichierCSV>();
-                foreach (var d in CSVFichierEleves.Lignes.Select(x => x[Indices[3]]).Distinct())
+                foreach (var d in CSVFichierEleves.Lignes.Select(x => x[Indices["DIV"]]).Distinct())
                 {
                     var csv = new FichierCSV {Colonnes = CSVFichierEleves.Colonnes.ToList()};
                     csv.Colonnes.AddRange(new[] {"Adherent", "Famille", "Delegues", "Caution", "loc_adhe", "Loc_NON"});
@@ -288,9 +371,9 @@ namespace GestionFichiersEleves
                     var curl = CSVFichierEleves.Lignes[i].ToList();
                     try
                     {
-                        var div = curl[Indices[3]];
+                        var div = curl[Indices["DIV"]];
 
-                        if (string.IsNullOrWhiteSpace(div) || string.IsNullOrWhiteSpace(curl[Indices[2]]))
+                        if (string.IsNullOrWhiteSpace(div) || string.IsNullOrWhiteSpace(curl[Indices["DIV SIECLE"]]))
                         {
                             csvAnomalie.Lignes.Add(curl);
                             continue;
@@ -298,15 +381,14 @@ namespace GestionFichiersEleves
 
                         curl.AddRange(new[] {"", "", ""}); // Adherent, Famille, Delegues (ne pas remplir)
 
+                        if (CSVDivisionsExclues != null && CSVDivisionsExclues.Lignes.Any(x => x.Contains(div)))
+                            continue;
 
                         var ligneDansFichDiv = CSVDivisions.Lignes.FirstOrDefault(x => x.Skip(4).Contains(div));
                         if (ligneDansFichDiv == null)
                         {
-                            if (!CSVDivisionsExclues.Lignes.Any(x => x.Contains(div)))
-                            {
                                 // Anomalie
                                 csvDivAnom.Lignes.Add(new List<string> {curl[0], curl[1], div});
-                            }
                             continue;
                         }
 
@@ -314,11 +396,11 @@ namespace GestionFichiersEleves
 
                         var lignesLivres = CSVFichierLivres.Lignes.Where(x => x[0] == ligneDansFichDiv[0]);
 
-                        foreach (var cli in curl.Skip(Indices[4]).Take(9))
+                        foreach (var cli in curl.Skip(Indices["OPTION 1"]).Take(Indices["NB OPTIONS"]))
                         {
                             if (lignesLivres.All(x => x[1] != cli) && !string.IsNullOrWhiteSpace(cli) && cli != "NC")
                             {
-                                if (
+                                if (CSVOptionsExclues == null ||
                                     !CSVOptionsExclues.Lignes.Any(
                                         y => (y[0] == "ALL" || y[0] == ligneDansFichDiv[0]) && y[1] == cli))
                                 {
@@ -327,13 +409,14 @@ namespace GestionFichiersEleves
                                 }
                             }
                         }
+                        collivre1 = curl.Count;
 
                         curl.AddRange(
                             lignesLivres.Where(
                                 x =>
-                                    (x[1] == "STD" || curl.Skip(Indices[4]).Take(9).Contains(x[1])) &&
-                                    !CSVOptionsExclues.Lignes.Any(
-                                        y => (y[0] == "ALL" || y[0] == ligneDansFichDiv[0]) && y[1] == x[1]))
+                                    (x[1] == "STD" || curl.Skip(Indices["OPTION 1"]).Take(Indices["NB OPTIONS"]).Contains(x[1])) &&
+                                    (CSVOptionsExclues == null || !CSVOptionsExclues.Lignes.Any(
+                                        y => (y[0] == "ALL" || y[0] == ligneDansFichDiv[0]) && y[1] == x[1])))
                                 .Select(x => x.Skip(2).Where(y => !string.IsNullOrWhiteSpace(y)))
                                 .SelectMany(x => x));
 
@@ -347,7 +430,7 @@ namespace GestionFichiersEleves
                     ChangeProgressBarCurrent(i + 1, CSVFichierEleves.Lignes.Count);
                 }
 
-                foreach (var kvp in csvClasses)
+                /*foreach (var kvp in csvClasses)
                 {
                     var ligneDansFichDiv = CSVDivisions.Lignes.FirstOrDefault(x => x.Skip(4).Contains(kvp.Key));
                     if (ligneDansFichDiv == null) continue;
@@ -360,7 +443,7 @@ namespace GestionFichiersEleves
                     ligneVide.AddRange(
                         lignesLivres.Select(x => x.Skip(2).Where(y => !string.IsNullOrWhiteSpace(y))).SelectMany(x => x));
                     kvp.Value.Lignes.Add(ligneVide);
-                }
+                }*/
 
                 ChangeProgressBarTotal(4, 6);
                 ChangeProgressBarCurrent(0, 3);
@@ -385,7 +468,20 @@ namespace GestionFichiersEleves
                 {
                     var it = csvClassesL[i];
                     if (it.Value.Lignes.Count == 0) continue;
-                    it.Value.Enregistrer(Path.Combine(sd, it.Value.Lignes[0][Indices[2]] + ".csv"));
+                    var iddivs = it.Value.Lignes[0][Indices["DIV SIECLE"]];
+                    var iddiv = it.Value.Lignes[0][Indices["DIV"]];
+                    it.Value.Enregistrer(Path.Combine(sd, iddivs + ".csv"));
+
+                    var ficheVierge = it.Value.Clone();
+                    ficheVierge.Lignes.Clear();
+                    var l = ficheVierge.Colonnes.Select(x => ".").Take(collivre1).ToList();
+                    var ligneDansFichDiv = CSVDivisions.Lignes.FirstOrDefault(x => x.Skip(4).Contains(iddiv));
+                    if (ligneDansFichDiv != null)
+                    {
+                        l.AddRange(CSVFichierLivres.Lignes.Where(x => x[0] == ligneDansFichDiv[0]).SelectMany(x => x.Skip(2)).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct());
+                        ficheVierge.Lignes.Add(l.ToSize(ficheVierge.Colonnes.Count).ToList());
+                        ficheVierge.Enregistrer(Path.Combine(sd, iddivs + "-vierge.csv"));
+                    }
 
                     ChangeProgressBarCurrent(i + 1, csvClassesL.Count);
                 }
@@ -411,6 +507,8 @@ namespace GestionFichiersEleves
                 Helper.ShowExceptionMessage(ex);
             }
         }
+
+        private int collivre1 = -1;
 
         public void ChangeProgressBarCurrent(int val, int max)
         {
@@ -451,7 +549,7 @@ namespace GestionFichiersEleves
         private void btnAbout_Click(object sender, EventArgs e)
         {
             MessageBox.Show(
-                "GestionFichiersEleves " + Assembly.GetExecutingAssembly().GetName().Version.ToString(2) + "\n" +
+                "GestionFichiersEleves " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + "\n" +
                 "Copyright © Tom Niget (zdimension) 2016\n\n" +
                 "GestionFichiersEleves est un logiciel développé par Tom Niget (moi), élève en classe de 2°6 du lycée " +
                 "Guillaume Fichet de Bonneville, pour l'Association des Parents d'Élèves de Bonneville (APEB), dans le " +

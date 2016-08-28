@@ -71,17 +71,19 @@ namespace GestionFichiersEleves
             var nl = Environment.NewLine;
             var result = "";
 
+            var nbcol = Colonnes.Count;
+
             if (colonnes)
                 result += string.Join(separateur.ToString(), Colonnes) + nl;
 
-            result += string.Join(nl, Lignes.Select(x => string.Join(separateur.ToString(), x)));
+            result += string.Join(nl, Lignes.Select(x => string.Join(separateur.ToString(), x.ToSize(nbcol))));
 
             return result;
         }
 
         public void Enregistrer(string fichier)
         {
-            File.WriteAllText(fichier, GenererCode(), Encoding.UTF8);
+            File.WriteAllText(fichier, GenererCode(), Encoding.Default);
         }
 
         public static FichierCSV FromDGV(DataGridView dgv)
@@ -93,6 +95,11 @@ namespace GestionFichiersEleves
                 Lignes = (from DataGridViewRow row in dgv.Rows
                           select (from DataGridViewCell cell in row.Cells select cell.Value?.ToString() ?? "").ToList()).ToList()
             };
+        }
+
+        public FichierCSV Clone()
+        {
+            return new FichierCSV {Colonnes = this.Colonnes.ToList(), Lignes = this.Lignes.ToList()};
         }
     }
 }

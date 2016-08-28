@@ -148,5 +148,13 @@ namespace GestionFichiersEleves
 
             MessageBox.Show(message, "Erreur", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+
+        public static IEnumerable<string> ToSize(this List<string> l, int size)
+        {
+            for (var i = 0; i < size; i++)
+            {
+                yield return i < l.Count ? l[i] : "";
+            }
+        }  
     }
 }
