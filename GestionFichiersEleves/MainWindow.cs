@@ -20,7 +20,7 @@ namespace GestionFichiersEleves
             InitializeComponent();
         }
 
-        public Dictionary<string, int> Indices = new Dictionary<string, int>
+        private readonly Dictionary<string, int> _indices = new Dictionary<string, int>
         {
             {"NOM", 0},
             {"PRENOM", 1},
@@ -36,15 +36,15 @@ namespace GestionFichiersEleves
             {"NB OPTIONS", 7}
         };
 
-        public Dictionary<int, string> Comments = new Dictionary<int, string>(); 
+        private readonly Dictionary<int, string> _comments = new Dictionary<int, string>();
 
-        public static readonly string PARAM_PATH = Path.Combine(Application.StartupPath, "parametres.txt");
+        private static readonly string ParamPath = Path.Combine(Application.StartupPath, "parametres.txt");
 
-        public Encoding EncodageParam = Encoding.UTF8;
+        private Encoding _encodageParam = Encoding.UTF8;
 
-        public void ChargerParams()
+        private void ChargerParams()
         {
-            if (!File.Exists(PARAM_PATH))
+            if (!File.Exists(ParamPath))
             {
                 EnregistrerParams();
                 MessageBox.Show("Le fichier de paramètres n'a pas été trouvé.\n" +
@@ -53,8 +53,8 @@ namespace GestionFichiersEleves
                 return;
             }
 
-            EncodageParam = Helper.GetEncoding(PARAM_PATH);
-            var lns = File.ReadAllLines(PARAM_PATH, EncodageParam);
+            _encodageParam = Helper.GetEncoding(ParamPath);
+            var lns = File.ReadAllLines(ParamPath, _encodageParam);
             var j = 0;
             for (var i = 0; i < lns.Length; i++)
             {
@@ -66,13 +66,13 @@ namespace GestionFichiersEleves
                     if (s.Length == 2)
                     {
                         var pn = s[0].ToUpper().Trim();
-                        if (Indices.ContainsKey(pn))
+                        if (_indices.ContainsKey(pn))
                         {
                             var pv = s[1].Trim();
                             var val = -1;
                             if (int.TryParse(pv, out val))
                             {
-                                Indices[pn] = val;
+                                _indices[pn] = val;
                                 j++;
                                 continue;
                             }
@@ -87,10 +87,10 @@ namespace GestionFichiersEleves
                 else
                 {
                     // Commentaire
-                    Comments.Add(i, l);
+                    _comments.Add(i, l);
                 }
             }
-            if (j != Indices.Count)
+            if (j != _indices.Count)
             {
                 MessageBox.Show("Certains paramètres étaient manquants ou invalides.\n" +
                                 "Leurs valeurs par défaut ont donc été rétablies.", "Erreur", MessageBoxButtons.OK,
@@ -99,11 +99,11 @@ namespace GestionFichiersEleves
             EnregistrerParams();
         }
 
-        public void EnregistrerParams()
+        private void EnregistrerParams()
         {
-            var ps = Indices.Select(x => x.Key + "=" + x.Value).ToList();
-            foreach(var d in Comments) ps.Insert(d.Key, d.Value);
-            File.WriteAllLines(PARAM_PATH, ps, EncodageParam);
+            var ps = _indices.Select(x => x.Key + "=" + x.Value).ToList();
+            foreach(var d in _comments) ps.Insert(d.Key, d.Value);
+            File.WriteAllLines(ParamPath, ps, _encodageParam);
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
@@ -122,7 +122,7 @@ namespace GestionFichiersEleves
 
             if (!Directory.Exists(bf)) return;
 
-            rootFolder = bf;
+            _rootFolder = bf;
 
             var feleves = Path.Combine(bf, "ELEVES.csv");
             if (File.Exists(feleves)) fsFichierEleves.FileName = feleves;
@@ -149,26 +149,26 @@ namespace GestionFichiersEleves
             Cursor = Cursors.Default;
         }
 
-        public void ChargerFichierEleves(string f)
+        private void ChargerFichierEleves(string f)
         {
             dgvEleves.Clear();
 
-            CSVFichierEleves = FichierCSV.LireFichierCsv(f);
-            if(CSVFichierEleves.Colonnes.Count != Indices["NB COL"])
+            _csvFichierEleves = FichierCsv.LireFichierCsv(f);
+            if(_csvFichierEleves.Colonnes.Count != _indices["NB COL"])
             {
                 MessageBox.Show(
-                    "Le fichier élèves contient " + CSVFichierEleves.Colonnes.Count +
-                    " colonnes, alors qu'il devrait normalement en contenir " + Indices["NB COL"] + ". Cela pourrait provoquer des erreurs.",
+                    "Le fichier élèves contient " + _csvFichierEleves.Colonnes.Count +
+                    " colonnes, alors qu'il devrait normalement en contenir " + _indices["NB COL"] + ". Cela pourrait provoquer des erreurs.",
                     "Attention", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-            CSVFichierEleves.RemplirDGV(dgvEleves);
+            _csvFichierEleves.RemplirDgv(dgvEleves);
         }
 
-        private FichierCSV CSVFichierEleves;
-        private FichierCSV CSVFichierLivres;
-        private FichierCSV CSVDivisions;
-        private FichierCSV CSVDivisionsExclues;
-        private FichierCSV CSVOptionsExclues;
+        private FichierCsv _csvFichierEleves;
+        private FichierCsv _csvFichierLivres;
+        private FichierCsv _csvDivisions;
+        private FichierCsv _csvDivisionsExclues;
+        private FichierCsv _csvOptionsExclues;
 
         private void fsFichierLivres_SelectedFileChanged(object sender, EventArgs e)
         {
@@ -177,22 +177,22 @@ namespace GestionFichiersEleves
             Cursor = Cursors.Default;
         }
 
-        public void ChargerFichierLivres(string f)
+        private void ChargerFichierLivres(string f)
         {
-            CSVFichierLivres = FichierCSV.LireFichierCsv(f, true);
+            _csvFichierLivres = FichierCsv.LireFichierCsv(f, true);
 
             dgvLivres.Clear();
 
             dgvLivres.Columns.Add("division", "Division");
             dgvLivres.Columns.Add("option", "Option");
 
-            var nbLivres = CSVFichierLivres.Lignes.Max(x => x.Count) - 2;
+            var nbLivres = _csvFichierLivres.Lignes.Max(x => x.Count) - 2;
             for (var i = 1; i <= nbLivres; i++)
             {
                 dgvLivres.Columns.Add("livre" + i, "Livre " + i);
             }
 
-            CSVFichierLivres.RemplirDGV(dgvLivres);
+            _csvFichierLivres.RemplirDgv(dgvLivres);
         }
 
         private void fsDivisions_SelectedFileChanged(object sender, EventArgs e)
@@ -202,9 +202,9 @@ namespace GestionFichiersEleves
             Cursor = Cursors.Default;
         }
 
-        public void ChargerFichierDivisions(string f)
+        private void ChargerFichierDivisions(string f)
         {
-            CSVDivisions = FichierCSV.LireFichierCsv(f);
+            _csvDivisions = FichierCsv.LireFichierCsv(f);
 
             dgvDivisions.Clear();
 
@@ -213,13 +213,13 @@ namespace GestionFichiersEleves
             dgvDivisions.Columns.Add("loc_adhe", "Loc. Adhérent");
             dgvDivisions.Columns.Add("loc_non", "Loc. Non adhérent");
 
-            var nbDiv = CSVDivisions.Lignes.Max(x => x.Count) - 4;
+            var nbDiv = _csvDivisions.Lignes.Max(x => x.Count) - 4;
             for (var i = 1; i <= nbDiv; i++)
             {
                 dgvDivisions.Columns.Add("division" + i, "Division " + i);
             }
 
-            CSVDivisions.RemplirDGV(dgvDivisions, false);
+            _csvDivisions.RemplirDgv(dgvDivisions, false);
         }
 
         private void fsDivisionsExclues_SelectedFileChanged(object sender, EventArgs e)
@@ -229,13 +229,13 @@ namespace GestionFichiersEleves
             Cursor = Cursors.Default;
         }
 
-        public void ChargerFichierDivisionsExclues(string f)
+        private void ChargerFichierDivisionsExclues(string f)
         {
-            CSVDivisionsExclues = FichierCSV.LireFichierCsv(f);
+            _csvDivisionsExclues = FichierCsv.LireFichierCsv(f);
 
             dgvDivisionsExclues.Clear();
 
-            CSVDivisionsExclues.RemplirDGV(dgvDivisionsExclues);
+            _csvDivisionsExclues.RemplirDgv(dgvDivisionsExclues);
         }
 
         private void fsOptionsExclues_SelectedFileChanged(object sender, EventArgs e)
@@ -245,21 +245,21 @@ namespace GestionFichiersEleves
             Cursor = Cursors.Default;
         }
 
-        public void ChargerFichierOptionsExclues(string f)
+        private void ChargerFichierOptionsExclues(string f)
         {
-            CSVOptionsExclues = FichierCSV.LireFichierCsv(f);
+            _csvOptionsExclues = FichierCsv.LireFichierCsv(f);
 
             dgvOptionsExclues.Clear();
 
-            CSVOptionsExclues.RemplirDGV(dgvOptionsExclues);
+            _csvOptionsExclues.RemplirDgv(dgvOptionsExclues);
         }
 
         private void btnStart_Click(object sender, EventArgs e)
         {
             var required = new List<string>();
-            if(CSVDivisions == null) required.Add("Divisions");
-            if(CSVFichierEleves == null) required.Add("Élèves");
-            if(CSVFichierLivres == null) required.Add("Livres");
+            if(_csvDivisions == null) required.Add("Divisions");
+            if(_csvFichierEleves == null) required.Add("Élèves");
+            if(_csvFichierLivres == null) required.Add("Livres");
             if (required.Count > 0)
             {
                 MessageBox.Show(
@@ -272,11 +272,11 @@ namespace GestionFichiersEleves
             bwMain.RunWorkerAsync();
         }
 
-        private string rootFolder = Application.StartupPath;
+        private string _rootFolder = Application.StartupPath;
 
-        private void creerDossiers()
+        private void CreerDossiers()
         {
-            var bf = rootFolder;
+            var bf = _rootFolder;
             while (!Directory.Exists(bf))
                 Directory.CreateDirectory(bf);
             var sd = Path.Combine(bf, "Fichiers Divisions");
@@ -300,25 +300,25 @@ namespace GestionFichiersEleves
                 ChangeProgressBarCurrent(0, 4);
 
                 // Options non trouvées dans le fichier Livres et non présentes dans le fichier Options-exclues.
-                var csvOptAnom = new FichierCSV {Colonnes = new List<string> {"Nom", "Prénom", "Division", "Option(s)"}};
+                var csvOptAnom = new FichierCsv {Colonnes = new List<string> {"Nom", "Prénom", "Division", "Option(s)"}};
                 ChangeProgressBarCurrent(1, 4);
 
                 // Division non trouvée dans le fichier Divisions.csv et non présentes dans le fichier Divisions-exclues.
-                var csvDivAnom = new FichierCSV {Colonnes = new List<string> {"Nom", "Prénom", "Division"}};
+                var csvDivAnom = new FichierCsv {Colonnes = new List<string> {"Nom", "Prénom", "Division"}};
                 ChangeProgressBarCurrent(2, 4);
 
                 // Mettre les frères et soeurs dans ce fichier.
-                var csvFratries = new FichierCSV {Colonnes = new List<string> {"Nom", "Prénom", "Division"}};
+                var csvFratries = new FichierCsv {Colonnes = new List<string> {"Nom", "Prénom", "Division"}};
                 ChangeProgressBarCurrent(3, 4);
 
                 // Gestion des cas non traités.
-                var csvAnomalie = new FichierCSV {Colonnes = CSVFichierEleves.Colonnes};
+                var csvAnomalie = new FichierCsv {Colonnes = _csvFichierEleves.Colonnes};
                 ChangeProgressBarCurrent(4, 4);
 
                 ChangeProgressBarTotal(1, 6);
                 ChangeProgressBarCurrent(0, 3);
                 ChangeStatus("Création des dossiers de sortie...");
-                var bf = rootFolder;
+                var bf = _rootFolder;
                 if (!Directory.Exists(bf)) Directory.CreateDirectory(bf);
                 ChangeProgressBarCurrent(1, 3);
                 var sd = Path.Combine(bf, "Fichiers Divisions");
@@ -340,24 +340,24 @@ namespace GestionFichiersEleves
                 ChangeStatus("Génération du fichier des fratries...");
 
                 var etape1 =
-                    CSVFichierEleves.Lignes.GroupBy(
-                        x => new {NomL1 = x[Indices["NOM L1"]], PrenomL1 = x[Indices["PRENOM L1"]], AdresseL1 = x[Indices["ADRESSE L1"]], CP = x[Indices["CP"]]});
+                    _csvFichierEleves.Lignes.GroupBy(
+                        x => new {NomL1 = x[_indices["NOM L1"]], PrenomL1 = x[_indices["PRENOM L1"]], AdresseL1 = x[_indices["ADRESSE L1"]], CP = x[_indices["CP"]]});
                 var etape2 = etape1.Where(x => x.Count() > 1);
                 ChangeProgressBarCurrent(5, 6);
                 csvFratries.Lignes = etape2.SelectMany(x => x.ToList().AddEmptyLine(x.Max(y => y.Count))).ToList();
-                creerDossiers();
+                CreerDossiers();
                 ChangeStatus("Enregistrement du fichier des fratries...");
                 csvFratries.Enregistrer(Path.Combine(st, "Fratries.csv"));
                 ChangeProgressBarCurrent(6, 6);
                 Thread.Sleep(500);
-                creerDossiers(); // Acquis de conscience, juste au cas où
+                CreerDossiers(); // Acquis de conscience, juste au cas où
                 ChangeProgressBarTotal(3, 6);
-                ChangeProgressBarCurrent(0, CSVFichierEleves.Lignes.Count);
+                ChangeProgressBarCurrent(0, _csvFichierEleves.Lignes.Count);
                 ChangeStatus("Génération des fichiers CSV...");
-                var csvClasses = new Dictionary<string, FichierCSV>();
-                foreach (var d in CSVFichierEleves.Lignes.Select(x => x[Indices["DIV"]]).Distinct())
+                var csvClasses = new Dictionary<string, FichierCsv>();
+                foreach (var d in _csvFichierEleves.Lignes.Select(x => x[_indices["DIV"]]).Distinct())
                 {
-                    var csv = new FichierCSV {Colonnes = CSVFichierEleves.Colonnes.ToList()};
+                    var csv = new FichierCsv {Colonnes = _csvFichierEleves.Colonnes.ToList()};
                     csv.Colonnes.AddRange(new[] {"Adherent", "Famille", "Delegues", "Caution", "loc_adhe", "Loc_NON"});
                     for (var i = 1; i <= 16; i++)
                     {
@@ -366,14 +366,14 @@ namespace GestionFichiersEleves
                     csvClasses.Add(d, csv);
                 }
 
-                for (var i = 0; i < CSVFichierEleves.Lignes.Count; i++)
+                for (var i = 0; i < _csvFichierEleves.Lignes.Count; i++)
                 {
-                    var curl = CSVFichierEleves.Lignes[i].ToList();
+                    var curl = _csvFichierEleves.Lignes[i].ToList();
                     try
                     {
-                        var div = curl[Indices["DIV"]];
+                        var div = curl[_indices["DIV"]];
 
-                        if (string.IsNullOrWhiteSpace(div) || string.IsNullOrWhiteSpace(curl[Indices["DIV SIECLE"]]))
+                        if (string.IsNullOrWhiteSpace(div) || string.IsNullOrWhiteSpace(curl[_indices["DIV SIECLE"]]))
                         {
                             csvAnomalie.Lignes.Add(curl);
                             continue;
@@ -381,10 +381,10 @@ namespace GestionFichiersEleves
 
                         curl.AddRange(new[] {"", "", ""}); // Adherent, Famille, Delegues (ne pas remplir)
 
-                        if (CSVDivisionsExclues != null && CSVDivisionsExclues.Lignes.Any(x => x.Contains(div)))
+                        if (_csvDivisionsExclues != null && _csvDivisionsExclues.Lignes.Any(x => x.Contains(div)))
                             continue;
 
-                        var ligneDansFichDiv = CSVDivisions.Lignes.FirstOrDefault(x => x.Skip(4).Contains(div));
+                        var ligneDansFichDiv = _csvDivisions.Lignes.FirstOrDefault(x => x.Skip(4).Contains(div));
                         if (ligneDansFichDiv == null)
                         {
                                 // Anomalie
@@ -394,14 +394,14 @@ namespace GestionFichiersEleves
 
                         curl.AddRange(ligneDansFichDiv.GetRange(1, 3));
 
-                        var lignesLivres = CSVFichierLivres.Lignes.Where(x => x[0] == ligneDansFichDiv[0]);
+                        var lignesLivres = _csvFichierLivres.Lignes.Where(x => x[0] == ligneDansFichDiv[0]).ToArray();
 
-                        foreach (var cli in curl.Skip(Indices["OPTION 1"]).Take(Indices["NB OPTIONS"]))
+                        foreach (var cli in curl.Skip(_indices["OPTION 1"]).Take(_indices["NB OPTIONS"]))
                         {
                             if (lignesLivres.All(x => x[1] != cli) && !string.IsNullOrWhiteSpace(cli) && cli != "NC")
                             {
-                                if (CSVOptionsExclues == null ||
-                                    !CSVOptionsExclues.Lignes.Any(
+                                if (_csvOptionsExclues == null ||
+                                    !_csvOptionsExclues.Lignes.Any(
                                         y => (y[0] == "ALL" || y[0] == ligneDansFichDiv[0]) && y[1] == cli))
                                 {
                                     // Anomalie
@@ -409,13 +409,13 @@ namespace GestionFichiersEleves
                                 }
                             }
                         }
-                        collivre1 = curl.Count;
+                        _collivre1 = curl.Count;
 
                         curl.AddRange(
                             lignesLivres.Where(
                                 x =>
-                                    (x[1] == "STD" || curl.Skip(Indices["OPTION 1"]).Take(Indices["NB OPTIONS"]).Contains(x[1])) &&
-                                    (CSVOptionsExclues == null || !CSVOptionsExclues.Lignes.Any(
+                                    (x[1] == "STD" || curl.Skip(_indices["OPTION 1"]).Take(_indices["NB OPTIONS"]).Contains(x[1])) &&
+                                    (_csvOptionsExclues == null || !_csvOptionsExclues.Lignes.Any(
                                         y => (y[0] == "ALL" || y[0] == ligneDansFichDiv[0]) && y[1] == x[1])))
                                 .Select(x => x.Skip(2).Where(y => !string.IsNullOrWhiteSpace(y)))
                                 .SelectMany(x => x));
@@ -427,7 +427,7 @@ namespace GestionFichiersEleves
                         csvAnomalie.Lignes.Add(curl);
                     }
 
-                    ChangeProgressBarCurrent(i + 1, CSVFichierEleves.Lignes.Count);
+                    ChangeProgressBarCurrent(i + 1, _csvFichierEleves.Lignes.Count);
                 }
 
                 /*foreach (var kvp in csvClasses)
@@ -449,7 +449,7 @@ namespace GestionFichiersEleves
                 ChangeProgressBarCurrent(0, 3);
                 ChangeStatus("Enregistrement des fichiers CSV de traitement...");
                 Thread.Sleep(200);
-                creerDossiers(); // Acquis de conscience, juste au cas où
+                CreerDossiers(); // Acquis de conscience, juste au cas où
                 csvOptAnom.Enregistrer(Path.Combine(st, "Options-anomalies.csv"));
                 ChangeProgressBarCurrent(1, 4);
 
@@ -468,17 +468,17 @@ namespace GestionFichiersEleves
                 {
                     var it = csvClassesL[i];
                     if (it.Value.Lignes.Count == 0) continue;
-                    var iddivs = it.Value.Lignes[0][Indices["DIV SIECLE"]];
-                    var iddiv = it.Value.Lignes[0][Indices["DIV"]];
+                    var iddivs = it.Value.Lignes[0][_indices["DIV SIECLE"]];
+                    var iddiv = it.Value.Lignes[0][_indices["DIV"]];
                     it.Value.Enregistrer(Path.Combine(sd, iddivs + ".csv"));
 
                     var ficheVierge = it.Value.Clone();
                     ficheVierge.Lignes.Clear();
-                    var l = ficheVierge.Colonnes.Select(x => ".").Take(collivre1).ToList();
-                    var ligneDansFichDiv = CSVDivisions.Lignes.FirstOrDefault(x => x.Skip(4).Contains(iddiv));
+                    var l = ficheVierge.Colonnes.Select(x => ".").Take(_collivre1).ToList();
+                    var ligneDansFichDiv = _csvDivisions.Lignes.FirstOrDefault(x => x.Skip(4).Contains(iddiv));
                     if (ligneDansFichDiv != null)
                     {
-                        l.AddRange(CSVFichierLivres.Lignes.Where(x => x[0] == ligneDansFichDiv[0]).SelectMany(x => x.Skip(2)).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct());
+                        l.AddRange(_csvFichierLivres.Lignes.Where(x => x[0] == ligneDansFichDiv[0]).SelectMany(x => x.Skip(2)).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct());
                         ficheVierge.Lignes.Add(l.ToSize(ficheVierge.Colonnes.Count).ToList());
                         ficheVierge.Enregistrer(Path.Combine(sd, iddivs + "-vierge.csv"));
                     }
@@ -508,7 +508,7 @@ namespace GestionFichiersEleves
             }
         }
 
-        private int collivre1 = -1;
+        private int _collivre1 = -1;
 
         public void ChangeProgressBarCurrent(int val, int max)
         {
@@ -540,7 +540,7 @@ namespace GestionFichiersEleves
             }
         }
 
-        public void ChangeStatus(string stat)
+        private void ChangeStatus(string stat)
         {
             if (lblStatus.InvokeRequired) lblStatus.Invoke((MethodInvoker) (() => lblStatus.Text = stat));
             else lblStatus.Text = stat;
@@ -550,11 +550,11 @@ namespace GestionFichiersEleves
         {
             MessageBox.Show(
                 "GestionFichiersEleves " + Assembly.GetExecutingAssembly().GetName().Version.ToString(3) + "\n" +
-                "Copyright © Tom Niget (zdimension) 2016\n\n" +
-                "GestionFichiersEleves est un logiciel développé par Tom Niget (moi), élève en classe de 2°6 du lycée " +
+                "Copyright © Tom Niget (zdimension) 2016-2019\n\n" +
+                "GestionFichiersEleves est un logiciel développé par Tom Niget (moi), à l'époque élève en classe de 2°6 du lycée " +
                 "Guillaume Fichet de Bonneville, pour l'Association des Parents d'Élèves de Bonneville (APEB), dans le " +
                 "cadre du cours ICN (Informatique et Création Numérique).\n\nEn cas de problème n'hésitez pas à me " +
-                "contacter à l'adresse e-mail suivante :\nzippedfire@free.fr\n\n" +
+                "contacter à l'adresse e-mail suivante :\ntom.niget@etu.univ-savoie.fr\n\n" +
                 "Date de compilation : " + Assembly.GetExecutingAssembly().GetLinkerTime().ToString("dd/MM/yyyy HH:mm:ss"),
                 "À propos du logiciel", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -576,46 +576,46 @@ namespace GestionFichiersEleves
             }
         }
 
-        private bool eleveModif;
-        private bool livresModif;
-        private bool divModif;
-        private bool divExclModif;
-        private bool optExclModif;
+        private bool _eleveModif;
+        private bool _livresModif;
+        private bool _divModif;
+        private bool _divExclModif;
+        private bool _optExclModif;
 
         private void dgvEleves_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            eleveModif = true;
+            _eleveModif = true;
         }
 
         private void dgvLivres_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            livresModif = true;
+            _livresModif = true;
         }
 
         private void dgvDivisions_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            divModif = true;
+            _divModif = true;
         }
 
         private void dgvDivisionsExclues_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            divExclModif = true;
+            _divExclModif = true;
         }
 
         private void dgvOptionsExclues_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            optExclModif = true;
+            _optExclModif = true;
         }
 
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
            
-            var verifs = new List<Tuple<bool, string, string, FichierCSV>>
+            var verifs = new List<Tuple<bool, string, string, FichierCsv>>
             {
-                Tuple.Create(eleveModif, "élèves", fsFichierEleves.FileName, FichierCSV.FromDGV(dgvEleves)),
-                Tuple.Create(divExclModif, "divisions exclues", fsDivisionsExclues.FileName, FichierCSV.FromDGV(dgvDivisionsExclues)),
-                Tuple.Create(optExclModif, "options exclues", fsOptionsExclues.FileName, FichierCSV.FromDGV(dgvOptionsExclues)),
+                Tuple.Create(_eleveModif, "élèves", fsFichierEleves.FileName, FichierCsv.FromDgv(dgvEleves)),
+                Tuple.Create(_divExclModif, "divisions exclues", fsDivisionsExclues.FileName, FichierCsv.FromDgv(dgvDivisionsExclues)),
+                Tuple.Create(_optExclModif, "options exclues", fsOptionsExclues.FileName, FichierCsv.FromDgv(dgvOptionsExclues)),
             };
             foreach (var cur in verifs)
             {
@@ -642,7 +642,7 @@ namespace GestionFichiersEleves
             }
             bool keep = false;
 
-            if (livresModif)
+            if (_livresModif)
                 if (MessageBox.Show(
                     "Le fichier des livres a été modifié à l'intérieur de " +
                     "GestionFichierEleves. Si vous fermez GestionFichierEleves," +
@@ -650,7 +650,7 @@ namespace GestionFichiersEleves
                     MessageBoxButtons.YesNo) == DialogResult.No)
                     keep = true;
 
-            if (divModif && !keep)
+            if (_divModif && !keep)
                 if (MessageBox.Show(
                     "Le fichier des divisions a été modifié à l'intérieur de " +
                     "GestionFichierEleves. Si vous fermez GestionFichierEleves," +

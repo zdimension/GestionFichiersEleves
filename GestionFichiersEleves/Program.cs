@@ -5,7 +5,7 @@ namespace GestionFichiersEleves
 {
     static class Program
     {
-        public const char SEPARATEUR = ';';
+        public const char Separateur = ';';
 
         /// <summary>
         /// Point d'entrée principal de l'application.

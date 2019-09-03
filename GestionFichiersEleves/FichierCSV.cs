@@ -8,21 +8,21 @@ using System.Windows.Forms;
 
 namespace GestionFichiersEleves
 {
-    public class FichierCSV
+    public class FichierCsv
     {
         public List<string> Colonnes { get; set; } = new List<string>();
 
         public List<List<string>> Lignes { get; set; } = new List<List<string>>();
 
-        public static FichierCSV LireCsv(string code, bool skipHeaders = false)
+        public static FichierCsv LireCsv(string code, bool skipHeaders = false)
         {
             var newline = Helper.DetecterLigne(code);
 
             var lignes = code.Split(new[] {newline}, StringSplitOptions.None);
 
-            var resultat = new FichierCSV();
+            var resultat = new FichierCsv();
             var i = 0;
-            resultat.Colonnes = skipHeaders ? new List<string>() : lignes[i++].Split(Program.SEPARATEUR).ToList();
+            resultat.Colonnes = skipHeaders ? new List<string>() : lignes[i++].Split(Program.Separateur).ToList();
 
             //resultat.Lignes = lignes.Skip(1).Select(x => x.Split(Program.SEPARATEUR).ToList()).ToList();
 
@@ -31,17 +31,17 @@ namespace GestionFichiersEleves
             for (; i < lignes.Length; i++)
             {
                 var cur = lignes[i];
-                if (string.IsNullOrWhiteSpace(cur) || cur.All(x => x == Program.SEPARATEUR))
+                if (string.IsNullOrWhiteSpace(cur) || cur.All(x => x == Program.Separateur))
                 {
                     break;
                 }
-                resultat.Lignes.Add(cur.Split(Program.SEPARATEUR).ToList());
+                resultat.Lignes.Add(cur.Split(Program.Separateur).ToList());
             }
 
             return resultat;
         }
 
-        public static FichierCSV LireFichierCsv(string file, bool skipHeaders = false)
+        public static FichierCsv LireFichierCsv(string file, bool skipHeaders = false)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace GestionFichiersEleves
             }
         }
 
-        public void RemplirDGV(DataGridView dgv, bool colonnes = true)
+        public void RemplirDgv(DataGridView dgv, bool colonnes = true)
         {
             if (colonnes)
                 Colonnes.ForEach(x => dgv.Columns.Add(new DataGridViewTextBoxColumn {HeaderText = x}));
@@ -66,7 +66,7 @@ namespace GestionFichiersEleves
             }
         }
 
-        public string GenererCode(char separateur = Program.SEPARATEUR, bool colonnes = true)
+        public string GenererCode(char separateur = Program.Separateur, bool colonnes = true)
         {
             var nl = Environment.NewLine;
             var result = "";
@@ -86,9 +86,9 @@ namespace GestionFichiersEleves
             File.WriteAllText(fichier, GenererCode(), Encoding.Default);
         }
 
-        public static FichierCSV FromDGV(DataGridView dgv)
+        public static FichierCsv FromDgv(DataGridView dgv)
         {
-            return new FichierCSV
+            return new FichierCsv
             {
                 Colonnes = (from DataGridViewTextBoxColumn column in dgv.Columns
                             select column.HeaderText).ToList(),
@@ -97,9 +97,9 @@ namespace GestionFichiersEleves
             };
         }
 
-        public FichierCSV Clone()
+        public FichierCsv Clone()
         {
-            return new FichierCSV {Colonnes = this.Colonnes.ToList(), Lignes = this.Lignes.ToList()};
+            return new FichierCsv {Colonnes = this.Colonnes.ToList(), Lignes = this.Lignes.ToList()};
         }
     }
 }

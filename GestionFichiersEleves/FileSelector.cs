@@ -29,17 +29,17 @@ namespace GestionFichiersEleves
         {
             if (ofpFile.ShowDialog() == DialogResult.OK)
             {
-                setLabelText(ofpFile.FileName);
+                SetLabelText(ofpFile.FileName);
             }
         }
 
         public string FileName
         {
-            get { return fName; }
-            set { fName = value; setLabelText(fName); SelectedFileChanged(this, EventArgs.Empty); }
+            get { return _fName; }
+            set { _fName = value; SetLabelText(_fName); SelectedFileChanged(this, EventArgs.Empty); }
         }
 
-        private string fName = "";
+        private string _fName = "";
 
         private void FileSelector_DragEnter(object sender, DragEventArgs e)
         {
@@ -62,14 +62,14 @@ namespace GestionFichiersEleves
         {
             var fls = (string[])e.Data.GetData(DataFormats.FileDrop);
             
-            setLabelText(fls[0]);
+            SetLabelText(fls[0]);
         }
 
-        private void setLabelText(string t)
+        private void SetLabelText(string t)
         {
             txtFile.ForeColor = Color.Black;
-            fName = t;
-            setLabelTextWrap(t);
+            _fName = t;
+            SetLabelTextWrap(t);
             ofpFile.InitialDirectory = Path.GetDirectoryName(t);
             toolTip1.SetToolTip(txtFile, t);
             SelectedFileChanged(this, EventArgs.Empty);
@@ -80,7 +80,7 @@ namespace GestionFichiersEleves
             
         }
 
-        private void setLabelTextWrap(string t)
+        private void SetLabelTextWrap(string t)
         {
             var wrapped = t.WrapPixel(txtFile.Width - 18, Font);
             if (wrapped != t) wrapped += "...";
@@ -90,7 +90,7 @@ namespace GestionFichiersEleves
         private void txtFile_SizeChanged(object sender, EventArgs e)
         {
             var s = txtFile.Size;
-            setLabelTextWrap(fName);
+            SetLabelTextWrap(_fName);
             txtFile.Size = s;
         }
     }
